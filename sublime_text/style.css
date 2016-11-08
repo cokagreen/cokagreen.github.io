@@ -1,3 +1,13 @@
-body {background-color:#48CFE3;}
-h1 {color:orange; text-align:center;}
-p {font-family:"Source Code Pro Medium"; font-size:20px;}
+body {
+	background-color: #d0e4fe;
+	padding: 2%;
+	margin: 1% 20% 1%;
+}
+h1 {
+	color: orange;
+	text-align: center;
+}
+p {
+	font-family: "Source Code Pro Medium";
+	font-size: 20px;
+}
