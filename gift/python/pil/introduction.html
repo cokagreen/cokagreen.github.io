@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html>
+ <head>
+  <meta charset="utf-8" />
+  <title>Introduction</title>
+  <link rel="stylesheet" type="../text/css" href="style.css" />
+ </head>
+ <body>
+  <article class="markdown-body">
+   <h2> <a id="user-content-part-i-introduction" class="anchor" href="#part-i-introduction" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Part I. Introduction</h2> 
+   <h3> <a id="user-content-python-imaging-library-overview" class="anchor" href="#python-imaging-library-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Python Imaging Library Overview</h3> 
+   <p><strong>Introduction</strong></p> 
+   <p>The Python Imaging Library adds image processing capabilities to your Python interpreter.</p> 
+   <p>This library provides extensive file format support, an efficient internal representation, and fairly powerful image processing capabilities.</p> 
+   <p>The core image library is designed for fast access to data stored in a few basic pixel formats. It should provide a solid foundation for a general image processing tool.</p> 
+   <p>Let's look at a few possible uses of this library:</p> 
+   <p><strong>Image Archives</strong></p> 
+   <p>The Python Imaging Library is ideal for for image archival and batch processing applications. You can use the library to create thumbnails, convert between file formats, print images, etc.</p> 
+   <p>The current version identifies and reads a large number of formats. Write support is intentionally restricted to the most commonly used interchange and presentation formats.</p> 
+   <p><strong>Image Display</strong></p> 
+   <p>The current release includes Tk PhotoImage and BitmapImage interfaces, as well as a Windows DIB interface that can be used with PythonWin and other Windows-based toolkits. Many other GUI toolkits come with some kind of PIL support.</p> 
+   <p>For debugging, there's also a show method which saves an image to disk, and calls an external display utility.</p> 
+   <p><strong>Image Processing</strong></p> 
+   <p>The library contains basic image processing functionality, including point operations, filtering with a set of built-in convolution kernels, and colour space conversions.</p> 
+   <p>The library also supports image resizing, rotation and arbitrary affine transforms.</p> 
+   <p>There's a histogram method allowing you to pull some statistics out of an image. This can be used for automatic contrast enhancement, and for global statistical analysis.</p> 
+   <h3> <a id="user-content-tutorial" class="anchor" href="#tutorial" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Tutorial</h3> 
+   <p><strong>Using the Image Class</strong></p> 
+   <p>The most important class in the Python Imaging Library is the <code>Image</code> class, defined in the module with the same name. You can create instances of this class in several ways; either by loading images from files, processing other images, or creating images from scratch.</p> 
+   <p>To load an image from a file, use the <code>open</code> function in the <code>Image</code> module.</p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">&gt;&gt;</span><span class="pl-k">&gt;</span> <span class="pl-k">import</span> Image
+<span class="pl-k">&gt;&gt;</span><span class="pl-k">&gt;</span> im <span class="pl-k">=</span> Image.open(<span class="pl-s"><span class="pl-pds">&quot;</span>lena.ppm<span class="pl-pds">&quot;</span></span>)
+</pre>
+   </div> 
+   <p>If successful, this function returns an <code>Image</code> object. You can now use instance attributes to examine the file contents.</p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">&gt;&gt;</span><span class="pl-k">&gt;</span> <span class="pl-c1">print</span> im.format, im.size, im.mode
+PPM (<span class="pl-c1">512</span>, <span class="pl-c1">512</span>) <span class="pl-c1">RGB</span></pre>
+   </div> 
+   <p>The <code>format</code> attribute identifies the source of an image. If the image was not read from a file, it is set to None. The <code>size</code> attribute is a 2-tuple containing width and height (in pixels). The <code>mode</code> attribute defines the number and names of the bands in the image, and also the pixel type and depth. Common modes are &quot;<strong>L</strong>&quot; (luminance) for greyscale images, &quot;<strong>RGB</strong>&quot; for true colour images, and &quot;<strong>CMYK</strong>&quot; for pre-press images.</p> 
+   <p>If the file cannot be opened, an <code>IOError</code> exception is raised.</p> 
+   <p>Once you have an instance of the <code>Image</code> class, you can use the methods defined by this class to process and manipulate the image. For example, let's display the image we just loaded:</p> 
+   <div class="highlight highlight-source-python">
+    <pre>    <span class="pl-k">&gt;&gt;</span><span class="pl-k">&gt;</span> im.show()</pre>
+   </div> 
+   <p>(The standard version of <code>show</code> is not very efficient, since it saves the image to a temporary file and calls the <code>xv</code> utility to display the image. If you don't have <code>xv</code> installed, it won't even work. When it does work though, it is very handy for debugging and tests.)</p> 
+   <p>The following sections provide an overview of the different functions provided in this library.</p> 
+   <p><strong>Reading and Writing Images</strong></p> 
+   <p>The Python Imaging Library supports a wide variety of image file formats. To read files from disk, use the <code>open</code> function in the <code>Image</code> module. You don't have to know the file format to open a file. The library automatically determines the format based on the contents of the file.</p> 
+   <p>To save a file, use the <code>save</code> method of the <code>Image</code> class. When saving files, the name becomes important. Unless you specify the format, the library uses the filename extension to discover which file storage format to use.</p> 
+   <p><em>Convert files to JPEG</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> os, sys
+<span class="pl-k">import</span> Image
+
+<span class="pl-k">for</span> infile <span class="pl-k">in</span> sys.argv[<span class="pl-c1">1</span>:]:
+    f, e <span class="pl-k">=</span> os.path.splitext(infile)
+    outfile <span class="pl-k">=</span> f <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">&quot;</span>.jpg<span class="pl-pds">&quot;</span></span>
+    <span class="pl-k">if</span> infile <span class="pl-k">!=</span> outfile:
+        <span class="pl-k">try</span>:
+            Image.open(infile).save(outfile)
+        <span class="pl-k">except</span> <span class="pl-c1">IOError</span>:
+            <span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">&quot;</span>cannot convert<span class="pl-pds">&quot;</span></span>, infile</pre>
+   </div> 
+   <p>A second argument can be supplied to the <code>save</code> method which explicitly specifies a file format. If you use a non-standard extension, you must always specify the format this way:</p> 
+   <p><em>Create JPEG Thumbnails</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> os, sys
+<span class="pl-k">import</span> Image
+
+size <span class="pl-k">=</span> <span class="pl-c1">128</span>, <span class="pl-c1">128</span>
+
+<span class="pl-k">for</span> infile <span class="pl-k">in</span> sys.argv[<span class="pl-c1">1</span>:]:
+    outfile <span class="pl-k">=</span> os.path.splitext(infile)[<span class="pl-c1">0</span>] <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">&quot;</span>.thumbnail<span class="pl-pds">&quot;</span></span>
+    <span class="pl-k">if</span> infile <span class="pl-k">!=</span> outfile:
+        <span class="pl-k">try</span>:
+            im <span class="pl-k">=</span> Image.open(infile)
+            im.thumbnail(size)
+            im.save(outfile, <span class="pl-s"><span class="pl-pds">&quot;</span>JPEG<span class="pl-pds">&quot;</span></span>)
+        <span class="pl-k">except</span> <span class="pl-c1">IOError</span>:
+            <span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">&quot;</span>cannot create thumbnail for<span class="pl-pds">&quot;</span></span>, infile</pre>
+   </div> 
+   <p>It is important to note that the library doesn't decode or load the raster data unless it really has to. When you open a file, the file header is read to determine the file format and extract things like mode, size, and other properties required to decode the file, but the rest of the file is not processed until later.</p> 
+   <p>This means that opening an image file is a fast operation, which is independent of the file size and compression type. Here's a simple script to quickly identify a set of image files:</p> 
+   <p><em>Identify Image Files</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> sys
+<span class="pl-k">import</span> Image
+
+<span class="pl-k">for</span> infile <span class="pl-k">in</span> sys.argv[<span class="pl-c1">1</span>:]:
+    <span class="pl-k">try</span>:
+        im <span class="pl-k">=</span> Image.open(infile)
+        <span class="pl-c1">print</span> infile, im.format, <span class="pl-s"><span class="pl-pds">&quot;</span><span class="pl-c1">%d</span>x<span class="pl-c1">%d</span><span class="pl-pds">&quot;</span></span> <span class="pl-k">%</span> im.size, im.mode
+    <span class="pl-k">except</span> <span class="pl-c1">IOError</span>:
+        <span class="pl-k">pass</span></pre>
+   </div> 
+   <p><strong>Cutting, Pasting and Merging Images</strong></p> 
+   <p>The <code>Image</code> class contains methods allowing you to manipulate regions within an image. To extract a sub-rectangle from an image, use the <code>crop</code> method.</p> 
+   <p><em>Copying a subrectangle from an image</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>    box <span class="pl-k">=</span> (<span class="pl-c1">100</span>, <span class="pl-c1">100</span>, <span class="pl-c1">400</span>, <span class="pl-c1">400</span>)
+    region <span class="pl-k">=</span> im.crop(box)</pre>
+   </div> 
+   <p>The region is defined by a 4-tuple, where coordinates are (left, upper, right, lower). The Python Imaging Library uses a coordinate system with (0, 0) in the upper left corner. Also note that coordinates refer to positions between the pixels, so the region in the above example is exactly 300x300 pixels.</p> 
+   <p>The region could now be processed in a certain manner and pasted back.</p> 
+   <p><em>Processing a subrectangle, and pasting it back</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>    region <span class="pl-k">=</span> region.transpose(Image.<span class="pl-c1">ROTATE_180</span>)
+    im.paste(region, box)</pre>
+   </div> 
+   <p>When pasting regions back, the size of the region must match the given region exactly. In addition, the region cannot extend outside the image. However, the rrmodes of the original image and the region do not need to match. If they don't, the region is automatically converted before being pasted (see the section on <code>Colour Transforms</code> below for details).</p> 
+   <p>Here's an additional example:</p> 
+   <p><em>Rolling an image</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">def</span> <span class="pl-en">roll</span>(<span class="pl-smi">image</span>, <span class="pl-smi">delta</span>):
+    <span class="pl-s"><span class="pl-pds">&quot;</span>Roll an image sideways<span class="pl-pds">&quot;</span></span>
+
+    xsize, ysize <span class="pl-k">=</span> image.size
+
+    delta <span class="pl-k">=</span> delta <span class="pl-k">%</span> xsize
+    <span class="pl-k">if</span> delta <span class="pl-k">==</span> <span class="pl-c1">0</span>: <span class="pl-k">return</span> image
+
+    part1 <span class="pl-k">=</span> image.crop((<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, delta, ysize))
+    part2 <span class="pl-k">=</span> image.crop((delta, <span class="pl-c1">0</span>, xsize, ysize))
+    image.paste(part2, (<span class="pl-c1">0</span>, <span class="pl-c1">0</span>, xsize<span class="pl-k">-</span>delta, ysize))
+    image.paste(part1, (xsize<span class="pl-k">-</span>delta, <span class="pl-c1">0</span>, xsize, ysize))
+
+    <span class="pl-k">return</span> image</pre>
+   </div> 
+   <p>For more advanced tricks, the paste method can also take a transparency mask as an optional argument. In this mask, the value 255 indicates that the pasted image is opaque in that position (that is, the pasted image should be used as is). The value 0 means that the pasted image is completely transparent. Values in-between indicate different levels of transparency.</p> 
+   <p>The Python Imaging Library also allows you to work with the individual bands of an multi-band image, such as an <code>RGB</code> image. The <code>split</code> method creates a set of new images, each containing one band from the original multi-band image. The merge function takes a mode and a tuple of images, and combines them into a new image. The following sample swaps the three bands of an <code>RGB</code> image:</p> 
+   <p><em>Splitting and merging bands</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>r, g, b <span class="pl-k">=</span> im.split()
+im <span class="pl-k">=</span> Image.merge(<span class="pl-s"><span class="pl-pds">&quot;</span>RGB<span class="pl-pds">&quot;</span></span>, (b, g, r))</pre>
+   </div> 
+   <p>Note that for a single-band image, split returns the image itself. To work with individual colour bands, you may want to convert the image to &quot;<strong>RGB</strong>&quot; first.</p> 
+   <p><strong>Geometrical Transforms</strong></p> 
+   <p>The <code>Image</code> class contains methods to <code>resize</code> and <code>rotate</code> an image. The former takes a tuple giving the new size, the latter the angle in degrees counter-clockwise.</p> 
+   <p><em>Simple geometry transforms</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>out <span class="pl-k">=</span> im.resize((<span class="pl-c1">128</span>, <span class="pl-c1">128</span>))
+out <span class="pl-k">=</span> im.rotate(<span class="pl-c1">45</span>) <span class="pl-c"><span class="pl-c">#</span> degrees counter-clockwise</span></pre>
+   </div> 
+   <p>To rotate the image in 90 degree steps, you can either use the <code>rotate</code> method or the transpose method. The latter can also be used to flip an image around its horizontal or vertical axis.</p> 
+   <p><em>Transposing an image</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>out <span class="pl-k">=</span> im.transpose(Image.<span class="pl-c1">FLIP_LEFT_RIGHT</span>)
+out <span class="pl-k">=</span> im.transpose(Image.<span class="pl-c1">FLIP_TOP_BOTTOM</span>)
+out <span class="pl-k">=</span> im.transpose(Image.<span class="pl-c1">ROTATE_90</span>)
+out <span class="pl-k">=</span> im.transpose(Image.<span class="pl-c1">ROTATE_180</span>)
+out <span class="pl-k">=</span> im.transpose(Image.<span class="pl-c1">ROTATE_270</span>)</pre>
+   </div> 
+   <p>There's no difference in performance or result between <code>transpose(ROTATE)</code> and corresponding <code>rotate</code> operations.</p> 
+   <p>A more general form of image transformations can be carried out via the transform method. See the reference section for details.</p> 
+   <p><strong>Colour Transforms</strong></p> 
+   <p>The Python Imaging Library allows you to convert images between different pixel representations using the convert function.</p> 
+   <p><strong>Converting between modes</strong></p> 
+   <div class="highlight highlight-source-python">
+    <pre>    im <span class="pl-k">=</span> Image.open(<span class="pl-s"><span class="pl-pds">&quot;</span>lena.ppm<span class="pl-pds">&quot;</span></span>).convert(<span class="pl-s"><span class="pl-pds">&quot;</span>L<span class="pl-pds">&quot;</span></span>)</pre>
+   </div> 
+   <p>The library supports transformations between each supported mode and the &quot;<strong>L</strong>&quot; and &quot;<strong>RGB</strong>&quot; modes. To convert between other modes, you may have to use an intermediate image (typically an &quot;<strong>RGB</strong>&quot; image).</p> 
+   <p><strong>Image Enhancement</strong></p> 
+   <p>The Python Imaging Library provides a number of methods and modules that can be used to enhance images.</p> 
+   <p><strong>Filters</strong></p> 
+   <p>The ImageFilter module contains a number of pre-defined enhancement filters that can be used with the filter method.</p> 
+   <p><em>Applying filters</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> ImageFilter
+out <span class="pl-k">=</span> im.filter(ImageFilter.<span class="pl-c1">DETAIL</span>)</pre>
+   </div> 
+   <p><strong>Point Operations</strong></p> 
+   <p>The point method can be used to translate the pixel values of an image (e.g. image contrast manipulation). In most cases, a function object expecting one argument can be passed to the this method. Each pixel is processed according to that function:</p> 
+   <p><em>Applying point transforms</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-c"><span class="pl-c">#</span> multiply each pixel by 1.2</span>
+out <span class="pl-k">=</span> im.point(<span class="pl-k">lambda</span> <span class="pl-smi">i</span>: i <span class="pl-k">*</span> <span class="pl-c1">1.2</span>)</pre>
+   </div> 
+   <p>Using the above technique, you can quickly apply any simple expression to an image. You can also combine the point and paste methods to selectively modify an image: &nbsp; <em>Processing individual bands</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-c"><span class="pl-c">#</span> split the image into individual bands</span>
+source <span class="pl-k">=</span> im.split()
+
+R, G, B <span class="pl-k">=</span> <span class="pl-c1">0</span>, <span class="pl-c1">1</span>, <span class="pl-c1">2</span>
+
+<span class="pl-c"><span class="pl-c">#</span> select regions where red is less than 100</span>
+mask <span class="pl-k">=</span> source[R].point(<span class="pl-k">lambda</span> <span class="pl-smi">i</span>: i <span class="pl-k">&lt;</span> <span class="pl-c1">100</span> <span class="pl-k">and</span> <span class="pl-c1">255</span>)
+
+<span class="pl-c"><span class="pl-c">#</span> process the green band</span>
+out <span class="pl-k">=</span> source[G].point(<span class="pl-k">lambda</span> <span class="pl-smi">i</span>: i <span class="pl-k">*</span> <span class="pl-c1">0.7</span>)
+
+<span class="pl-c"><span class="pl-c">#</span> paste the processed band back, but only where red was &lt; 100</span>
+source[G].paste(out, <span class="pl-c1">None</span>, mask)
+
+<span class="pl-c"><span class="pl-c">#</span> build a new multiband image</span>
+im <span class="pl-k">=</span> Image.merge(im.mode, source)</pre>
+   </div> 
+   <p>Note the syntax used to create the mask: <code>imout = im.point(lambda i: expression and 255)</code></p> 
+   <p>Python only evaluates the portion of a logical expression as is necessary to determine the outcome, and returns the last value examined as the result of the expression. So if the expression above is false (0), Python does not look at the second operand, and thus returns 0. Otherwise, it returns 255.</p> 
+   <p><strong>Enhancement</strong></p> 
+   <p>For more advanced image enhancement, you can use the classes in the <code>ImageEnhance</code> module. Once created from an image, an <code>enhancement</code> object can be used to quickly try out different settings.</p> 
+   <p>You can adjust contrast, brightness, colour balance and sharpness in this way.</p> 
+   <p><em>Enhancing images</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> ImageEnhance
+
+enh <span class="pl-k">=</span> ImageEnhance.Contrast(im)
+enh.enhance(<span class="pl-c1">1.3</span>).show(<span class="pl-s"><span class="pl-pds">&quot;</span>30% more contrast<span class="pl-pds">&quot;</span></span>)</pre>
+   </div> 
+   <p><strong>Image Sequences</strong></p> 
+   <p>The Python Imaging Library contains some basic support for image sequences (also called animation formats). Supported sequence formats include FLI/FLC, GIF, and a few experimental formats. TIFF files can also contain more than one frame.</p> 
+   <p>When you open a sequence file, PIL automatically loads the first frame in the sequence. You can use the seek and tell methods to move between different frames:</p> 
+   <p><em>Reading sequences</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> Image
+
+im <span class="pl-k">=</span> Image.open(<span class="pl-s"><span class="pl-pds">&quot;</span>animation.gif<span class="pl-pds">&quot;</span></span>)
+im.seek(<span class="pl-c1">1</span>) <span class="pl-c"><span class="pl-c">#</span> skip to the second frame</span>
+
+<span class="pl-k">try</span>:
+    <span class="pl-k">while</span> <span class="pl-c1">1</span>:
+        im.seek(im.tell()<span class="pl-k">+</span><span class="pl-c1">1</span>)
+        <span class="pl-c"><span class="pl-c">#</span> do something to im</span>
+<span class="pl-k">except</span> <span class="pl-c1">EOFError</span>:
+    <span class="pl-k">pass</span> <span class="pl-c"><span class="pl-c">#</span> end of sequence</span></pre>
+   </div> 
+   <p>As seen in this example, you'll get an <code>EOFError</code> exception when the sequence ends.</p> 
+   <p>Note that most drivers in the current version of the library only allow you to seek to the next frame (as in the above example). To rewind the file, you may have to reopen it.</p> 
+   <p>The following iterator class lets you to use the for-statement to loop over the sequence:</p> 
+   <p><em>A sequence iterator class</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">class</span> <span class="pl-en">ImageSequence</span>:
+    <span class="pl-k">def</span> <span class="pl-c1">__init__</span>(<span class="pl-smi"><span class="pl-smi">self</span></span>, <span class="pl-smi">im</span>):
+        <span class="pl-c1">self</span>.im <span class="pl-k">=</span> im
+    <span class="pl-k">def</span> <span class="pl-c1">__getitem__</span>(<span class="pl-smi"><span class="pl-smi">self</span></span>, <span class="pl-smi">ix</span>):
+        <span class="pl-k">try</span>:
+            <span class="pl-k">if</span> ix:
+                <span class="pl-c1">self</span>.im.seek(ix)
+            <span class="pl-k">return</span> <span class="pl-c1">self</span>.im
+        <span class="pl-k">except</span> <span class="pl-c1">EOFError</span>:
+            <span class="pl-k">raise</span> <span class="pl-c1">IndexError</span> <span class="pl-c"><span class="pl-c">#</span> end of sequence</span>
+
+<span class="pl-k">for</span> frame <span class="pl-k">in</span> ImageSequence(im):
+    <span class="pl-c"><span class="pl-c">#</span> ...do something to frame...</span></pre>
+   </div> 
+   <p><strong>Postscript Printing</strong></p> 
+   <p>The Python Imaging Library includes functions to print images, text and graphics on Postscript printers. Here's a simple example:</p> 
+   <p><em>Drawing Postscript</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> Image
+<span class="pl-k">import</span> PSDraw
+
+im <span class="pl-k">=</span> Image.open(<span class="pl-s"><span class="pl-pds">&quot;</span>lena.ppm<span class="pl-pds">&quot;</span></span>)
+title <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">&quot;</span>lena<span class="pl-pds">&quot;</span></span>
+box <span class="pl-k">=</span> (<span class="pl-c1">1</span><span class="pl-k">*</span><span class="pl-c1">72</span>, <span class="pl-c1">2</span><span class="pl-k">*</span><span class="pl-c1">72</span>, <span class="pl-c1">7</span><span class="pl-k">*</span><span class="pl-c1">72</span>, <span class="pl-c1">10</span><span class="pl-k">*</span><span class="pl-c1">72</span>) <span class="pl-c"><span class="pl-c">#</span> in points</span>
+
+ps <span class="pl-k">=</span> PSDraw.PSDraw() <span class="pl-c"><span class="pl-c">#</span> default is sys.stdout</span>
+ps.begin_document(title)
+
+<span class="pl-c"><span class="pl-c">#</span> draw the image (75 dpi)</span>
+ps.image(box, im, <span class="pl-c1">75</span>)
+ps.rectangle(box)
+
+<span class="pl-c"><span class="pl-c">#</span> draw centered title</span>
+ps.setfont(<span class="pl-s"><span class="pl-pds">&quot;</span>HelveticaNarrow-Bold<span class="pl-pds">&quot;</span></span>, <span class="pl-c1">36</span>)
+w, h, b <span class="pl-k">=</span> ps.textsize(title)
+ps.text((<span class="pl-c1">4</span><span class="pl-k">*</span><span class="pl-c1">72</span><span class="pl-k">-</span>w<span class="pl-k">/</span><span class="pl-c1">2</span>, <span class="pl-c1">1</span><span class="pl-k">*</span><span class="pl-c1">72</span><span class="pl-k">-</span>h), title)
+
+ps.end_document()</pre>
+   </div> 
+   <p><strong>More on Reading Images</strong></p> 
+   <p>As described earlier, the <code>open</code> function of the <code>Image</code> module is used to open an image file. In most cases, you simply pass it the filename as an argument:</p> 
+   <p><code>im = Image.open(&quot;lena.ppm&quot;)</code></p> 
+   <p>If everything goes well, the result is an <code>Image</code> object. Otherwise, an <code>IOError</code> exception is raised.</p> 
+   <p>You can use a file-like object instead of the filename. The object must implement read, seek and tell methods, and be opened in binary mode.</p> 
+   <p><em>Reading from an open file</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>fp <span class="pl-k">=</span> <span class="pl-c1">open</span>(<span class="pl-s"><span class="pl-pds">&quot;</span>lena.ppm<span class="pl-pds">&quot;</span></span>, <span class="pl-s"><span class="pl-pds">&quot;</span>rb<span class="pl-pds">&quot;</span></span>)
+im <span class="pl-k">=</span> Image.open(fp)</pre>
+   </div> 
+   <p>To read an image from string data, use the <code>StringIO</code> class: <em>Reading from a string</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> StringIO
+
+im <span class="pl-k">=</span> Image.open(StringIO.StringIO(buffer))</pre>
+   </div> 
+   <p>Note that the library rewinds the file (using seek(0)) before reading the image header. In addition, seek will also be used when the image data is read (by the <code>load</code> method). If the image file is embedded in a larger file, such as a tar file, you can use the <code>ContainerIO</code> or <code>TarIO</code> modules to access it.</p> 
+   <p><em>Reading from a tar archive</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre><span class="pl-k">import</span> TarIO
+
+fp <span class="pl-k">=</span> TarIO.TarIO(<span class="pl-s"><span class="pl-pds">&quot;</span>Imaging.tar<span class="pl-pds">&quot;</span></span>, <span class="pl-s"><span class="pl-pds">&quot;</span>Imaging/test/lena.ppm<span class="pl-pds">&quot;</span></span>)
+im <span class="pl-k">=</span> Image.open(fp)</pre>
+   </div> 
+   <p><strong>Controlling the Decoder</strong></p> 
+   <p>Some decoders allow you to manipulate the image while reading it from a file. This can often be used to speed up decoding when creating thumbnails (when speed is usually more important than quality) and printing to a monochrome laser printer (when only a greyscale version of the image is needed).</p> 
+   <p>The draft method manipulates an opened but not yet loaded image so it as closely as possible matches the given <code>mode</code> and <code>size</code>. This is done by reconfiguring the image decoder.</p> 
+   <p><em>Reading in draft mode</em></p> 
+   <div class="highlight highlight-source-python">
+    <pre>im <span class="pl-k">=</span> Image.open(<span class="pl-v">file</span>)
+<span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">&quot;</span>original =<span class="pl-pds">&quot;</span></span>, im.mode, im.size
+
+im.draft(<span class="pl-s"><span class="pl-pds">&quot;</span>L<span class="pl-pds">&quot;</span></span>, (<span class="pl-c1">100</span>, <span class="pl-c1">100</span>))
+<span class="pl-c1">print</span> <span class="pl-s"><span class="pl-pds">&quot;</span>draft =<span class="pl-pds">&quot;</span></span>, im.mode, im.size
+This prints something like:
+original <span class="pl-k">=</span> RGB (<span class="pl-c1">512</span>, <span class="pl-c1">512</span>)
+draft <span class="pl-k">=</span> L (<span class="pl-c1">128</span>, <span class="pl-c1">128</span>)</pre>
+   </div> 
+   <p>Note that the resulting image may not exactly match the requested <code>mode</code> and <code>size</code>. To make sure that the image is not larger than the given size, use the <code>thumbnail</code> method instead.</p> 
+   <h3> <a id="user-content-concepts" class="anchor" href="#concepts" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Concepts</h3> 
+   <p>The Python Imaging Library handles raster images; that is, rectangles of pixel data.</p> 
+   <p><strong>Bands</strong></p> 
+   <p>An image can consist of one or more bands of data. The Python Imaging Library allows you to store several bands in a single image, provided they all have the same dimensions and depth.</p> 
+   <p>To get the number and names of bands in an image, use the getbands method.</p> 
+   <p><strong>Mode</strong></p> 
+   <p>The mode of an image defines the type and depth of a pixel in the image. The current release supports the following standard modes:</p> 
+   <table> 
+    <thead> 
+     <tr> 
+      <th align="right">Mode</th> 
+      <th align="left">Description</th> 
+     </tr> 
+    </thead> 
+    <tbody> 
+     <tr> 
+      <td align="right">1</td> 
+      <td align="left">1-bit pixels, black and white, stored with one pixel per byte</td> 
+     </tr> 
+     <tr> 
+      <td align="right">L</td> 
+      <td align="left">8-bit pixels, black and white</td> 
+     </tr> 
+     <tr> 
+      <td align="right">P</td> 
+      <td align="left">8-bit pixels, mapped to any other mode using a colour palette</td> 
+     </tr> 
+     <tr> 
+      <td align="right">RGB</td> 
+      <td align="left">3x8-bit pixels, true colour</td> 
+     </tr> 
+     <tr> 
+      <td align="right">RGBA</td> 
+      <td align="left">4x8-bit pixels, true colour with transparency mask</td> 
+     </tr> 
+     <tr> 
+      <td align="right">CMYK</td> 
+      <td align="left">4x8-bit pixels, colour separation</td> 
+     </tr> 
+     <tr> 
+      <td align="right">YCbCr</td> 
+      <td align="left">3x8-bit pixels, colour video format</td> 
+     </tr> 
+     <tr> 
+      <td align="right">I</td> 
+      <td align="left">32-bit signed integer pixels</td> 
+     </tr> 
+     <tr> 
+      <td align="right">F</td> 
+      <td align="left">32-bit floating point pixels</td> 
+     </tr> 
+    </tbody> 
+   </table> 
+   <p><code>PIL</code> also provides limited support for a few special modes, including LA (L with alpha), RGBX (true colour with padding) and RGBa (true colour with premultiplied alpha). However, PIL doesn’t support user-defined modes; if you to handle band combinations that are not listed above, use a sequence of Image objects.</p> 
+   <p>You can read the mode of an image through the mode attribute. This is a string containing one of the above values.</p> 
+   <p><strong>Size</strong></p> 
+   <p>You can read the image size through the size attribute. This is a 2-tuple, containing the horizontal and vertical size in pixels.</p> 
+   <p><strong>Coordinate System</strong></p> 
+   <p>The Python Imaging Library uses a Cartesian pixel coordinate system, with (0,0) in the upper left corner. Note that the coordinates refer to the implied pixel corners; the centre of a pixel addressed as (0, 0) actually lies at (0.5, 0.5).</p> 
+   <p>FIXME: Add illustration!</p> 
+   <p>Coordinates are usually passed to the library as 2-tuples (x, y). Rectangles are represented as 4-tuples, with the upper left corner given first. For example, a rectangle covering all of an 800x600 pixel image is written as (0, 0, 800, 600).</p> 
+   <p><strong>Palette</strong></p> 
+   <p>The palette mode (“P”) uses a colour palette to define the actual colour for each pixel.</p> 
+   <p><strong>Info</strong></p> 
+   <p>You can attach auxiliary information to an image using the info attribute. This is a dictionary object.</p> 
+   <p>How such information is handled when loading and saving image files is up to the file format handler (see the chapter on Image File Formats). Most handlers add properties to the info attribute when loading an image, but ignore it when saving images.</p> 
+   <p><strong>Filters</strong></p> 
+   <p>For geometry operations that may map multiple input pixels to a single output pixel, the Python Imaging Library provides four different resampling filters.</p> 
+   <p><em>NEAREST</em></p> 
+   <p>Pick the nearest pixel from the input image. Ignore all other input pixels.</p> 
+   <p><em>BILINEAR</em></p> 
+   <p>Use linear interpolation over a 2x2 environment in the input image. Note that in the current version of PIL, this filter uses a fixed input environment when downsampling.</p> 
+   <p><em>BICUBIC</em></p> 
+   <p>Use cubic interpolation over a 4x4 environment in the input image. Note that in the current version of PIL, this filter uses a fixed input environment when downsampling.</p> 
+   <p><em>ANTIALIAS</em></p> 
+   <p>(New in PIL 1.1.3). Calculate the output pixel value using a high-quality resampling filter (a truncated sinc) on all pixels that may contribute to the output value. In the current version of PIL, this filter can only be used with the resize and thumbnail methods.</p> 
+   <p>Note that in the current version of PIL, the ANTIALIAS filter is the only filter that behaves properly when downsampling (that is, when converting a large image to a small one). The BILINEAR and BICUBIC filters use a fixed input environment, and are best used for scale-preserving geometric transforms and upsamping.</p> 
+  </article>
+ </body>
+</html>
