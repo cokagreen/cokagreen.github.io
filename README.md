@@ -1,5 +1,2 @@
-cokagreen.github.io
-===================
+# Welcome
 
-# The Github Pages of cokagreen
-My github pages.
