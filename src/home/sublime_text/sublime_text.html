@@ -1,22 +1,16 @@
 <!DOCTYPE html>
 <html>
- <head>
+<head>
   <meta charset="utf-8" />
   <title>Sublime Text</title>
-  <link rel="stylesheet" type="text/css" href="style.css" />
- </head>
- <body>
+  <link rel="stylesheet" type="text/css" href="../../css/style.css" />
+</head>
+<body>
   <article class="markdown-body">
-   <h1> <a id="user-content-sublime-text" class="anchor" href="#sublime-text" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sublime Text</h1> 
-   <h2> <a id="user-content-install" class="anchor" href="#install" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Install</h2> 
-   <p><a href="https://www.sublimetext.com/3">Download</a></p> 
-   <h2> <a id="user-content-package-control" class="anchor" href="#package-control" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Package Control</h2> 
-   <p><a href="https://packagecontrol.io/installation">INSTALLATION</a></p> 
-   <div class="highlight highlight-source-python">
-    <pre><span class="pl-k">import</span> urllib.request,os,hashlib; h <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>df21e130d211cfc94d9b0905775a7c0f<span class="pl-pds">'</span></span> <span class="pl-k">+</span> <span class="pl-s"><span class="pl-pds">'</span>1e3d39e33b79698005270310898eea76<span class="pl-pds">'</span></span>; pf <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>Package Control.sublime-package<span class="pl-pds">'</span></span>; ipp <span class="pl-k">=</span> sublime.installed_packages_path(); urllib.request.install_opener( urllib.request.build_opener( urllib.request.ProxyHandler()) ); by <span class="pl-k">=</span> urllib.request.urlopen( <span class="pl-s"><span class="pl-pds">'</span>http://packagecontrol.io/<span class="pl-pds">'</span></span> <span class="pl-k">+</span> pf.replace(<span class="pl-s"><span class="pl-pds">'</span> <span class="pl-pds">'</span></span>, <span class="pl-s"><span class="pl-pds">'</span>%20<span class="pl-pds">'</span></span>)).read(); dh <span class="pl-k">=</span> hashlib.sha256(by).hexdigest(); <span class="pl-c1">print</span>(<span class="pl-s"><span class="pl-pds">'</span>Error validating download (got <span class="pl-c1">%s</span> instead of <span class="pl-c1">%s</span>), please try manual install<span class="pl-pds">'</span></span> <span class="pl-k">%</span> (dh, h)) <span class="pl-k">if</span> dh <span class="pl-k">!=</span> h <span class="pl-k">else</span> <span class="pl-c1">open</span>(os.path.join( ipp, pf), <span class="pl-s"><span class="pl-pds">'</span>wb<span class="pl-pds">'</span></span> ).write(by)</pre>
-   </div> 
-   <h2> <a id="user-content-font" class="anchor" href="#font" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Font</h2> 
-   <p><a href="https://github.com/adobe-fonts/source-code-pro">Source Code Pro Medium</a></p> 
+   <h1> <a id="user-content-git-cheat-sheet" class="anchor" href="#git-cheat-sheet" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Sublime Text</h1>
+   <ul> 
+    <li><a href="sublime_install.html">PIL Hand Book</a></li> 
+   </ul> 
   </article>
- </body>
+</body>
 </html>
